@@ -113,7 +113,6 @@ public class StaticCatalogStore
         log.info("-- Loading catalog %s using connector %s --", catalogName, connectorName);
         connectorManager.createConnection(catalogName, connectorName, ImmutableMap.copyOf(properties));
         log.info("-- Added catalog %s using connector %s --", catalogName, connectorName);
-
     }
 
     private static List<File> listFiles(File installedPluginsDir)
