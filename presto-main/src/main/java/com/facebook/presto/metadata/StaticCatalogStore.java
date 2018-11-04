@@ -62,6 +62,13 @@ public class StaticCatalogStore
         return catalogsLoaded.get();
     }
 
+    public void removeCatalog(String catalogName)
+    {
+        log.info("-- Removing catalog %s --", catalogName);
+        connectorManager.dropConnection(catalogName);
+        log.info("-- Removed catalog %s --", catalogName);
+    }
+
     public void loadCatalogs()
             throws Exception
     {
@@ -95,6 +102,18 @@ public class StaticCatalogStore
 
         connectorManager.createConnection(catalogName, connectorName, ImmutableMap.copyOf(properties));
         log.info("-- Added catalog %s using connector %s --", catalogName, connectorName);
+    }
+
+    public void loadCatalog(String catalogName, String connectorName, Map<String, String> properties)
+    {
+        if (disabledCatalogs.contains(catalogName)) {
+            log.info("Skipping disabled catalog %s", catalogName);
+            return;
+        }
+        log.info("-- Loading catalog %s using connector %s --", catalogName, connectorName);
+        connectorManager.createConnection(catalogName, connectorName, ImmutableMap.copyOf(properties));
+        log.info("-- Added catalog %s using connector %s --", catalogName, connectorName);
+
     }
 
     private static List<File> listFiles(File installedPluginsDir)

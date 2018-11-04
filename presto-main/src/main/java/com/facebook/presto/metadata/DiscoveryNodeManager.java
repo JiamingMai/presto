@@ -26,6 +26,7 @@ import com.google.common.collect.ImmutableSetMultimap;
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
+import com.google.common.util.concurrent.ListenableFuture;
 import io.airlift.discovery.client.ServiceDescriptor;
 import io.airlift.discovery.client.ServiceSelector;
 import io.airlift.discovery.client.ServiceType;
@@ -43,6 +44,7 @@ import javax.inject.Inject;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -155,6 +157,11 @@ public final class DiscoveryNodeManager
     public void refreshNodes()
     {
         refreshNodesInternal();
+    }
+
+    public synchronized ListenableFuture<List<ServiceDescriptor>> refreshServices()
+    {
+        return serviceSelector.refresh();
     }
 
     private synchronized PrestoNode refreshNodesInternal()
@@ -271,6 +278,12 @@ public final class DiscoveryNodeManager
     {
         refreshIfNecessary();
         return allNodes;
+    }
+
+    public synchronized SetMultimap<ConnectorId, Node> getActiveConnectorNodes()
+    {
+        refreshIfNecessary();
+        return activeNodesByConnectorId;
     }
 
     @Managed

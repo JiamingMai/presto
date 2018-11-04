@@ -258,6 +258,8 @@ public class ServerMainModule
         binder.bind(SqlTaskManager.class).in(Scopes.SINGLETON);
         binder.bind(TaskManager.class).to(Key.get(SqlTaskManager.class));
 
+        jaxrsBinder(binder).bind(CatalogResource.class);
+
         // memory revoking scheduler
         binder.bind(MemoryRevokingScheduler.class).in(Scopes.SINGLETON);
 
